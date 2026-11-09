@@ -1,0 +1,30 @@
+# CARouter routes this model to Augure (Canada; Canadian-owned, off by default).
+# Other live routes: scaleway (used only when the account enables them).
+# Price: Free plan CAD 3.45 in / 8.05 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort = none|low|high|max. Verified live 2026-11-09 (served by Scaleway, tier fast):
+#   none returned 0 reasoning tokens; low < high < max in reasoning tokens on the same prompt.
+#   medium is accepted but did not land between low and high, so it is left out. Matches Scaleway's
+#   low|high|max (providers/scaleway/models/glm-5.3.toml). On the Augure route reasoning_effort is
+#   accepted but "no setting shortens the thinking as served today" (https://augureai.ca/docs/models).
+#   Output cap is Augure's 49,152; Scaleway caps at 16,384.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 49_152
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.4712
+
+[cost.text.output]
+price = 5.7661
